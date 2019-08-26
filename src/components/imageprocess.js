@@ -67,12 +67,15 @@ async function notify({ numFiles, timeTaken, bytesSaved, perctSaved, imagePath }
  */
 async function optimizeFile(path) {
     try {
+        console.log('0')
         const dataUri = await DataURI(path)
-
+        console.log('1')
         const originalBuffer = await fs.readFile(path)
+        console.log('2')
         const optimizedBuffer = await imagemin.buffer(originalBuffer, { plugins: imageMinPlugins })
+        console.log('3')
         await fs.writeFile(path, optimizedBuffer)
-
+        console.log('4')
         return {
             dataUri,
             originalSize: originalBuffer.length,
@@ -94,8 +97,9 @@ async function optimize(event, files) {
     // Stackoverflow:- https://goo.gl/wGdkog
     await Promise.all(
         files.map(async (file, index) => {
+            console.log('starting file', file)
             const { dataUri, originalSize, optimizedSize } = await optimizeFile(file)
-
+            console.log('file did optimize yay?')
             totalOriginalSize.push(originalSize)
             totalOptimizedSize.push(optimizedSize)
 
@@ -109,6 +113,7 @@ async function optimize(event, files) {
             fileData[index].optimizedSize = prettyBytes(optimizedSize)
             fileData[index].deltaPerct = deltaPerct
             fileData[index].deltaBytes = deltaBytes
+            console.log('fileData', fileData[index])
         })
     )
 

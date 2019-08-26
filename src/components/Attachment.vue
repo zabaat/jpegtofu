@@ -175,6 +175,7 @@ export default {
                 this.tempAttachments = [...this.tempAttachments, attachment]
                 return f
             })
+            console.log('ran files!', acceptedFiles, rejectedFiles)
 
             if (rejectedFiles.length) {
                 this.$q.notify(`Error processing ${rejectedFiles.length} files. Invalid file type.`)
@@ -182,6 +183,7 @@ export default {
             if (acceptedFiles.length > 0) {
                 this.processing = true
                 const paths = acceptedFiles.map(f => f.path)
+                console.log('starting optimize')
                 const results = await optimize(new Event('squishing'), paths)
                 this.processing = false
                 this.$emit('results', results)
