@@ -11,7 +11,7 @@ import { Notify } from 'quasar'
 
 const imageMinPlugins = [
     imageminJpegtran(),
-    imageminPngquant({ quality: '65-80' }),
+    imageminPngquant({ quality: [0.65, 0.8] }),
     imageminGifsicle({ optimizationLevel: 2 }),
     imageminSvgo({
         plugins: [
@@ -98,22 +98,26 @@ async function optimize(event, files) {
     await Promise.all(
         files.map(async (file, index) => {
             console.log('starting file', file)
-            const { dataUri, originalSize, optimizedSize } = await optimizeFile(file)
-            console.log('file did optimize yay?')
-            totalOriginalSize.push(originalSize)
-            totalOptimizedSize.push(optimizedSize)
+            try {
+                const { dataUri, originalSize, optimizedSize } = await optimizeFile(file)
+                console.log('file did optimize yay?')
+                totalOriginalSize.push(originalSize)
+                totalOptimizedSize.push(optimizedSize)
 
-            const { deltaPerct, deltaBytes } = await calculateDelta(originalSize, optimizedSize)
+                const { deltaPerct, deltaBytes } = await calculateDelta(originalSize, optimizedSize)
 
-            fileData[index] = {}
-            fileData[index].path = file
-            fileData[index].dataUri = dataUri
-            fileData[index].fileName = file.replace(/^.*[\\/]/, '')
-            fileData[index].originalSize = prettyBytes(originalSize)
-            fileData[index].optimizedSize = prettyBytes(optimizedSize)
-            fileData[index].deltaPerct = deltaPerct
-            fileData[index].deltaBytes = deltaBytes
-            console.log('fileData', fileData[index])
+                fileData[index] = {}
+                fileData[index].path = file
+                fileData[index].dataUri = dataUri
+                fileData[index].fileName = file.replace(/^.*[\\/]/, '')
+                fileData[index].originalSize = prettyBytes(originalSize)
+                fileData[index].optimizedSize = prettyBytes(optimizedSize)
+                fileData[index].deltaPerct = deltaPerct
+                fileData[index].deltaBytes = deltaBytes
+                console.log('fileData', fileData[index])
+            } catch (err) {
+                console.error('error image file', err)
+            }
         })
     )
 
