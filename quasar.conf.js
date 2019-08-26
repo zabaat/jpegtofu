@@ -132,7 +132,7 @@ module.exports = ctx => {
         },
 
         electron: {
-            // bundler: 'builder', // or 'packager'
+            bundler: 'builder', // or 'packager'
             // eslint-disable-next-line
             extendWebpack(cfg) {
                 // do something with Electron main process Webpack cfg
