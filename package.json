@@ -13,14 +13,17 @@
     "dependencies": {
         "@quasar/extras": "^1.0.0",
         "browser-image-compression": "^1.0.6",
+        "datauri": "^2.0.0",
         "fs-extra": "^8.1.0",
         "imagemin": "^5.3.1",
         "imagemin-gifsicle": "^5.2.0",
         "imagemin-jpegtran": "^6.0.0",
         "imagemin-pngquant": "^5.0.1",
         "imagemin-svgo": "^6.0.0",
+        "plur": "^3.1.1",
         "pretty-bytes": "^5.3.0",
         "quasar": "^1.0.0",
+        "spawn-sync": "^2.0.0",
         "vue-file-picker": "0.0.2",
         "vue2-dropzone": "^3.6.0"
     },
