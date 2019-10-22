@@ -10,17 +10,17 @@ import imageminSvgo from 'imagemin-svgo'
 import { Notify } from 'quasar'
 
 const imageMinPlugins = [
-  imageminJpegtran(),
-  imageminPngquant({ quality: '65-80' }),
-  imageminGifsicle({ optimizationLevel: 2 }),
-  imageminSvgo({
-    plugins: [
-      {
-        removeTitle: true,
-        removeDimensions: true,
-      },
-    ],
-  }),
+    imageminJpegtran(),
+    imageminPngquant({ quality: [0.65, 0.8] }),
+    imageminGifsicle({ optimizationLevel: 2 }),
+    imageminSvgo({
+        plugins: [
+            {
+                removeTitle: true,
+                removeDimensions: true,
+            },
+        ],
+    }),
 ]
 
 async function msToHuman(ms) {
@@ -88,6 +88,7 @@ async function optimizeFile(path) {
 }
 
 async function optimize(event, files) {
+<<<<<<< HEAD
   const startTime = new Date()
   const totalOriginalSize = []
   const totalOptimizedSize = []
@@ -132,6 +133,56 @@ async function optimize(event, files) {
   }
   notify(results)
   return results
+=======
+    const startTime = new Date()
+    const totalOriginalSize = []
+    const totalOptimizedSize = []
+    const fileData = {}
+
+    // Runs file optimizations in parallel
+    // Stackoverflow:- https://goo.gl/wGdkog
+    await Promise.all(
+        files.map(async (file, index) => {
+            console.log('starting file', file)
+            try {
+                const { dataUri, originalSize, optimizedSize } = await optimizeFile(file)
+                console.log('file did optimize yay?')
+                totalOriginalSize.push(originalSize)
+                totalOptimizedSize.push(optimizedSize)
+
+                const { deltaPerct, deltaBytes } = await calculateDelta(originalSize, optimizedSize)
+
+                fileData[index] = {}
+                fileData[index].path = file
+                fileData[index].dataUri = dataUri
+                fileData[index].fileName = file.replace(/^.*[\\/]/, '')
+                fileData[index].originalSize = prettyBytes(originalSize)
+                fileData[index].optimizedSize = prettyBytes(optimizedSize)
+                fileData[index].deltaPerct = deltaPerct
+                fileData[index].deltaBytes = deltaBytes
+                console.log('fileData', fileData[index])
+            } catch (err) {
+                console.error('error image file', err)
+            }
+        })
+    )
+
+    const { deltaPerct, deltaBytes, rawBytes } = await calculateTotDelta(totalOriginalSize, totalOptimizedSize)
+    const deltaTime = await msToHuman(new Date() - startTime)
+
+    console.log(`Saved ${deltaBytes}, thats a ${deltaPerct}% ↓ in size`)
+    // event.sender.send('files:optimized', fileData, { deltaBytes, deltaPerct })
+    const results = {
+        rawBytes,
+        numFiles: files.length,
+        timeTaken: deltaTime,
+        bytesSaved: deltaBytes,
+        perctSaved: deltaPerct,
+        imagePath: files,
+    }
+    notify(results)
+    return results
+>>>>>>> 2fa818975dd90d56b9f3ff0166d0f244195ea790
 }
 
 export default optimize
