@@ -1,0 +1,25 @@
+{
+  "editor.formatOnPaste": false,
+  "editor.formatOnSave": false,
+  "eslint.autoFixOnSave": true,
+  "eslint.validate": [
+    {
+      "language": "vue",
+      "autoFix": true
+    },
+    {
+      "language": "html",
+      "autoFix": true
+    },
+    {
+      "language": "javascript",
+      "autoFix": true
+    }
+  ],
+  "prettier.eslintIntegration": true,
+  "vetur.format.defaultFormatter.html": "prettyhtml",
+  "vetur.format.defaultFormatter.js": "prettier-eslint",
+  "sync.gist": "0efcb8e63e974a72151c8c7f59d6a100",
+  "git.autofetch": true,
+  "editor.formatOnType": false
+}
